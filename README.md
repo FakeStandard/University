@@ -3,4 +3,4 @@
 官方練習 - 學生系統
 
 ### Reference
-[Getting Started with EF 5 using MVC 4](https://learn.microsoft.com/en-us/aspnet/mvc/overview/older-versions/getting-started-with-ef-5-using-mvc-4/)
+[ASP.NET Core MVC with EF Core](https://learn.microsoft.com/en-us/aspnet/core/data/ef-mvc/?view=aspnetcore-5.0)
