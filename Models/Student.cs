@@ -30,7 +30,7 @@ namespace University.Models
         [DisplayName("Full Name")]
         public string FullName
         {
-            get => $"{LastName} + {FirstName}";
+            get => $"{LastName}, {FirstName}";
         }
 
         public ICollection<Enrollment> Enrollments { get; set; }
