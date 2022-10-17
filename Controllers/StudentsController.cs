@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using University.Common;
 using University.Data;
 using University.Models;
 
@@ -20,8 +21,19 @@ namespace University.Controllers
         }
 
         // GET: Students
-        public async Task<IActionResult> Index(string sortOrder, string searchString)
+        public async Task<IActionResult> Index(
+            string sortOrder,
+            string currentFilter,
+            string searchString,
+            int? pageNumber)
         {
+            ViewData["CurrentSort"] = sortOrder;
+
+            if (searchString != null)
+                pageNumber = 1;
+            else
+                searchString = currentFilter;
+
             var students = from s in _context.Students
                            select s;
 
@@ -51,7 +63,13 @@ namespace University.Controllers
                     break;
             }
 
-            return View(await students.AsNoTracking().ToListAsync());
+            int pageSize = 3;
+
+            //return View(await students.AsNoTracking().ToListAsync());
+            return View(
+                await PaginatedList<Student>.CreateAsync(
+                    students.AsNoTracking(), pageNumber ?? 1, pageSize)
+                );
         }
 
         // GET: Students/Details/5
