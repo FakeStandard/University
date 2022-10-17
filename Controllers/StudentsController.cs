@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using University.Common;
+using University.DAL.IRepository;
+using University.DAL.Repository;
 using University.Data;
 using University.Models;
 
@@ -13,11 +15,12 @@ namespace University.Controllers
 {
     public class StudentsController : Controller
     {
-        private readonly SchoolContext _context;
+        //private readonly SchoolContext _context;
+        private IStudentRepository _repository;
 
-        public StudentsController(SchoolContext context)
+        public StudentsController(IStudentRepository repository)
         {
-            _context = context;
+            _repository = repository;
         }
 
         // GET: Students
@@ -34,7 +37,7 @@ namespace University.Controllers
             else
                 searchString = currentFilter;
 
-            var students = from s in _context.Students
+            var students = from s in _repository.GetStudents()
                            select s;
 
             // Filter
@@ -67,24 +70,20 @@ namespace University.Controllers
 
             //return View(await students.AsNoTracking().ToListAsync());
             return View(
-                await PaginatedList<Student>.CreateAsync(
-                    students.AsNoTracking(), pageNumber ?? 1, pageSize)
-                );
+                 PaginatedList<Student>.CreateAsync(
+                    students, pageNumber ?? 1, pageSize
+                ));
         }
 
         // GET: Students/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public IActionResult Details(int? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var student = await _context.Students
-                .Include(s => s.Enrollments)
-                .ThenInclude(e => e.Course)
-                .AsNoTracking() // 停用追蹤記憶體中的實體物件
-                .FirstOrDefaultAsync(m => m.ID == id);
+            var student = _repository.GetStudentByID(id);
 
             if (student == null)
             {
@@ -111,8 +110,12 @@ namespace University.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    _context.Add(student);
-                    await _context.SaveChangesAsync();
+                    //_context.Add(student);
+                    //await _context.SaveChangesAsync();
+
+                    _repository.InsertStudent(student);
+                    _repository.Save();
+
                     return RedirectToAction(nameof(Index));
                 }
             }
@@ -135,11 +138,14 @@ namespace University.Controllers
                 return NotFound();
             }
 
-            var student = await _context.Students.FindAsync(id);
+            //var student = await _context.Students.FindAsync(id);
+            var student = _repository.GetStudentByID(id);
+
             if (student == null)
             {
                 return NotFound();
             }
+
             return View(student);
         }
 
@@ -148,20 +154,25 @@ namespace University.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost, ActionName("Edit")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> EditPost(int? id)
+        public async Task<IActionResult> EditPost(int id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var student = await _context.Students.FirstOrDefaultAsync(s => s.ID == id);
+            //var student = await _context.Students.FirstOrDefaultAsync(s => s.ID == id);
+
+            var student = _repository.GetStudentByID(id);
 
             if (await TryUpdateModelAsync<Student>(student, "", s => s.FirstName, s => s.LastName, s => s.EnrollmentDate))
             {
                 try
                 {
-                    await _context.SaveChangesAsync();
+                    //await _context.SaveChangesAsync();
+                    _repository.UpdateStudent(student);
+                    _repository.Save();
+
                     return RedirectToAction(nameof(Index));
                 }
                 catch (DbUpdateException)
@@ -174,28 +185,6 @@ namespace University.Controllers
             }
 
             return View(student);
-
-            //if (ModelState.IsValid)
-            //{
-            //    try
-            //    {
-            //        _context.Update(student);
-            //        await _context.SaveChangesAsync();
-            //    }
-            //    catch (DbUpdateConcurrencyException)
-            //    {
-            //        if (!StudentExists(student.ID))
-            //        {
-            //            return NotFound();
-            //        }
-            //        else
-            //        {
-            //            throw;
-            //        }
-            //    }
-            //    return RedirectToAction(nameof(Index));
-            //}
-            //return View(student);
         }
 
         // GET: Students/Delete/5
@@ -206,9 +195,11 @@ namespace University.Controllers
                 return NotFound();
             }
 
-            var student = await _context.Students
-                .AsNoTracking()
-                .FirstOrDefaultAsync(m => m.ID == id);
+            //var student = await _context.Students
+            //    .AsNoTracking()
+            //    .FirstOrDefaultAsync(m => m.ID == id);
+
+            var student = _repository.GetStudentByID(id);
 
             if (student == null)
             {
@@ -230,7 +221,9 @@ namespace University.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var student = await _context.Students.FindAsync(id);
+            //var student = await _context.Students.FindAsync(id);
+
+            var student = _repository.GetStudentByID(id);
 
             if (student == null)
             {
@@ -239,8 +232,12 @@ namespace University.Controllers
 
             try
             {
-                _context.Students.Remove(student);
-                await _context.SaveChangesAsync();
+                //_context.Students.Remove(student);
+                //await _context.SaveChangesAsync();
+
+                _repository.DeleteStudent(id);
+                _repository.Save();
+
                 return RedirectToAction(nameof(Index));
             }
             catch (DbUpdateException)
@@ -252,7 +249,9 @@ namespace University.Controllers
 
         private bool StudentExists(int id)
         {
-            return _context.Students.Any(e => e.ID == id);
+            //return _context.Students.Any(e => e.ID == id);
+
+            return _repository.IsExists(id);
         }
     }
 }

@@ -6,6 +6,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.EntityFrameworkCore;
 using University.Data;
+using University.DAL.IRepository;
+using University.DAL.Repository;
 
 namespace University
 {
@@ -27,6 +29,9 @@ namespace University
 
             // 在開發環境中提供有用的錯誤訊息
             services.AddDatabaseDeveloperPageExceptionFilter();
+
+            // 注入/註冊/DI Repository
+            services.AddScoped<IStudentRepository, StudentRepository>();
 
             services.AddControllersWithViews();
         }
