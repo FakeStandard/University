@@ -33,9 +33,6 @@ namespace University.Controllers
                 return NotFound();
             }
 
-            //var student = await _context.Students
-            //    .FirstOrDefaultAsync(m => m.ID == id);
-
             var student = await _context.Students
                 .Include(s => s.Enrollments)
                 .ThenInclude(e => e.Course)
@@ -113,7 +110,7 @@ namespace University.Controllers
 
             var student = await _context.Students.FirstOrDefaultAsync(s => s.ID == id);
 
-            if (await TryUpdateModelAsync<Student>(student, "", s => s.FirstName, s => s.LastName, s => s.Enrollments))
+            if (await TryUpdateModelAsync<Student>(student, "", s => s.FirstName, s => s.LastName, s => s.EnrollmentDate))
             {
                 try
                 {
