@@ -12,13 +12,13 @@ namespace University
     {
         public static void Main(string[] args)
         {
-            CreateHostBuilder(args).Build().Run();
+            //CreateHostBuilder(args).Build().Run();
 
-            //var host = CreateHostBuilder(args).Build();
+            var host = CreateHostBuilder(args).Build();
 
-            //CreateDbIfNotExists(host);
+            CreateDbIfNotExists(host);
 
-            //host.Run();
+            host.Run();
         }
 
         /// <summary>
