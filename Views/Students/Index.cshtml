@@ -14,6 +14,25 @@
     </div>
 </div>
 
+<form asp-action="Index" method="get">
+    <div class="form-actions no-color container pb-3 pt-3 text-center">
+        <div class="row d-flex">
+            <div class="col-auto">
+                <label>Find by name</label>
+            </div>
+            <div class="col-auto">
+                <input type="text" name="searchString" value="@ViewData["CurrentFilter"]" class="form-control" />
+            </div>
+            <div class="col-auto">
+                <input type="submit" value="Search" class="btn btn-outline-success" />
+            </div>
+            <div class="col-auto">
+                <a asp-action="Index" class="btn btn-outline-dark">Back to Full List</a>
+            </div>
+        </div>
+    </div>
+</form>
+
 <table class="table table-hover">
     <thead>
         <tr>
