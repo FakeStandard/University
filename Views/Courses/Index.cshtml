@@ -6,9 +6,14 @@
 
 <h1>Courses</h1>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
+<div class="container pb-3">
+    <div class="row d-flex flex-row-reverse">
+        <div class="col-auto">
+            <a asp-action="Create" class="btn btn-warning">Create New</a>
+        </div>
+    </div>
+</div>
+
 <table class="table">
     <thead>
         <tr>
@@ -43,9 +48,9 @@
                 @Html.DisplayFor(modelItem => item.Department.Name)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.CourseID">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.CourseID">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.CourseID">Delete</a>
+                <a asp-action="Edit" asp-route-id="@item.CourseID" class="btn btn-outline-primary btn-sm">Edit</a>
+                <a asp-action="Details" asp-route-id="@item.CourseID" class="btn btn-outline-secondary btn-sm">Details</a>
+                <a asp-action="Delete" asp-route-id="@item.CourseID" class="btn btn-outline-danger btn-sm">Delete</a>
             </td>
         </tr>
 }

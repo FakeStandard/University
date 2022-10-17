@@ -4,33 +4,39 @@
     ViewData["Title"] = "Details";
 }
 
-<h1>Details</h1>
+<h1>Details Course</h1>
+<hr />
 
 <div>
-    <h4>Course</h4>
-    <hr />
     <dl class="row">
-        <dt class = "col-sm-2">
+        <dt class="col-sm-3  pt-2">
             @Html.DisplayNameFor(model => model.Title)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-9  pt-2">
             @Html.DisplayFor(model => model.Title)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-3 pt-2">
             @Html.DisplayNameFor(model => model.Credits)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-9  pt-2">
             @Html.DisplayFor(model => model.Credits)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-3  pt-2">
             @Html.DisplayNameFor(model => model.Department)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-9  pt-2">
             @Html.DisplayFor(model => model.Department.DepartmentID)
         </dd>
     </dl>
 </div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model.CourseID">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+
+<div class="form-group pt-5">
+    <div class="row d-flex flex-row-reverse">
+        <div class="col-auto">
+            <a asp-action="Index" class="btn btn-outline-dark">Back to List</a>
+        </div>
+        <div class="col-auto">
+            <a asp-action="Edit" asp-route-id="@Model.CourseID" class="btn btn-outline-primary">Edit</a>
+        </div>
+    </div>
 </div>
